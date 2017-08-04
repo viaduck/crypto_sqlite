@@ -8,6 +8,15 @@ set(SQLITE_SHA1 "6786fced716237689cfa8212265967f28cef5de9" CACHE STRING
 string(CONCAT SQLITE_URL "https://sqlite.org/" ${SQLITE_YEAR} "/sqlite-amalgamation-" ${SQLITE_VERSION} ".zip")
 string(CONCAT SQLITE_SUBDIR "sqlite-amalgamation-" ${SQLITE_VERSION})
 
+# find patch program to apply small patches to sqlite
+find_program(PATCH_PROGRAM patch)
+if (NOT PATCH_PROGRAM)
+    message(FATAL_ERROR "Cannot find patch utility.")
+endif()
+
+# find all patch files
+file(GLOB_RECURSE PATCH_FILES ${CMAKE_CURRENT_SOURCE_DIR}/patches/*.patch)
+
 # download amalgamation zip with hash check
 file(DOWNLOAD
         ${SQLITE_URL}
@@ -23,17 +32,17 @@ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR})
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar x sqlite.zip
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
+    foreach(PATCH_FILE ${PATCH_FILES})
+        # apply each patch subsequently
+        execute_process(COMMAND ${PATCH_PROGRAM} -p1 -i ${PATCH_FILE}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR}/)
+    endforeach()
+
 endif()
 
 # find files just downloaded
-file(GLOB_RECURSE SQ_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR}/*.h)
-set(SQ_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR}/sqlite3.c)
+file(GLOB_RECURSE SQ_FILES ${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR}/*)
 
-# add to includes
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR})
-
-# vanilla sqlite lib
-add_library(sqlite ${SQ_INCLUDES} ${SQ_SOURCES})
-
-# associate headers to library, transfer headers to every target depending on sqlite via PUBLIC
-target_include_directories(sqlite PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR})
+# export variables to parent scope
+set(SQLITE_FILES SQ_FILES PARENT_SCOPE)
+set(SQLITE_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR}/ PARENT_SCOPE)
