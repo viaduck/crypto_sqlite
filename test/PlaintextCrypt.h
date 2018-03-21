@@ -23,7 +23,7 @@
 #include <cstring>
 #include <secure_memory/Buffer.h>
 #include <secure_memory/BufferRange.h>
-#include "IDataCrypt.h"
+#include <cryptosqlite/encryption/IDataCrypt.h>
 
 class PlaintextCrypt : public IDataCrypt {
 public:

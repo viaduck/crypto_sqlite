@@ -19,7 +19,6 @@
 
 #include <secure_memory/String.h>
 #include <cryptosqlite/cryptosqlite.h>
-#include <cryptosqlite/encryption/PlaintextCrypt.h>
 #include "BasicTest.h"
 
 #define ASSERT_OK(x) ASSERT_EQ(SQLITE_OK, (x))
