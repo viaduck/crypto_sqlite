@@ -10,14 +10,29 @@ plus SQLite3 header.
 * key file support: long encryption key is stored separately, can be protected
 with a password)
 
-## Usage
+## Setup
 1. Initialize Git submodules: `git submodule update --init --recursive`
-2. Implement `IDataCrypt` interface (for an example see
+2. Link against the `cryptosqlite` CMake library target.
+3. Implement `IDataCrypt` interface (for an example see
 [test/TestCrypt.h](test/TestCrypt.h) or
 [test/PlaintextCrypt.h](test/PlaintextCrypt.h))
-3. Link against the `cryptosqlite` CMake library target.
-4. Use the SQLite3 crypto functions
-([Jan Chren has written a good overview](https://github.com/rindeal/SQLite3-Encryption#functions)).
+
+## Usage
+Either:
+
+1. `int sqlite3_open_encrypted(const char *fileName, sqlite3 **db, const void
+*key, int keySize)`
+
+Or:
+
+1. `void sqlite3_prepare_open_encrypted(const char *fileName, const void *key,
+int keySize)`
+2. `sqlite3_open`
+3. `sqlite3_key`
+
+**Note**: *Opening* multiple encrypted databases at the same time is not
+thread-safe, but *using* them is.
+
 
 ## SQLite Compatibility
 cryptoSQLite automatically downloads, patches, and compiles the SQLite3
@@ -51,7 +66,7 @@ This library is subject to the GNU Lesser General Public License v3.0 (GNU
 LGPLv3).
 
 ```
-Copyright (C) 2016-2018  The ViaDuck Project
+Copyright (C) 2017-2018  The ViaDuck Project
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
