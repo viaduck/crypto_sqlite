@@ -23,8 +23,8 @@
 #include <gtest/gtest.h>
 #include <sqlite3.h>
 #include <cryptosqlite/Codec.h>
+#include <cryptosqlite/encryption/PlaintextCrypt.h>
 #include "TestCrypt.h"
-#include "PlaintextCrypt.h"
 
 class BasicTest : public ::testing::Test {
 protected:
