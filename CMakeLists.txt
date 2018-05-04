@@ -21,10 +21,6 @@ project(cryptoSQLite)
 
 # set cmake module path
 list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/external/securememory/cmake-modules")
-list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules")
-
-# find ICU package
-find_package(ICU REQUIRED i18n)
 
 # enable and require c++11
 set(CMAKE_CXX_STANDARD 11)
@@ -38,6 +34,10 @@ if (NOT TARGET SecureMemory)
     add_subdirectory(external/securememory)
 endif()
 
+if (NOT TARGET icu)
+    add_subdirectory(external/icu-cmake)
+endif()
+
 # glob files
 file(GLOB_RECURSE CS_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/include/*)
 file(GLOB_RECURSE CS_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*)
@@ -49,7 +49,7 @@ add_library(cryptosqlite ${CS_INCLUDES} ${CS_SOURCES})
 target_compile_options(cryptosqlite PRIVATE -Wall -Wextra)
 
 # link options
-target_link_libraries(cryptosqlite SecureMemory ICU::ICU)
+target_link_libraries(cryptosqlite SecureMemory icu)
 if (NOT WIN32)
     target_link_libraries(cryptosqlite dl)
 endif()
