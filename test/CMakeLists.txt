@@ -27,8 +27,8 @@ if (GTEST_FOUND)
     include_directories(${GTEST_INCLUDE_DIRS})
 
     # basic test executable
-    add_executable(CryptoSQLiteTest ${TEST_SOURCE} ${TEST_INCLUDE})
+    add_executable(CryptoSQLite_Test ${TEST_SOURCE} ${TEST_INCLUDE})
 
     # add dependencies
-    target_link_libraries(CryptoSQLiteTest ${GTEST_BOTH_LIBRARIES} pthread cryptosqlite)
+    target_link_libraries(CryptoSQLite_Test ${GTEST_BOTH_LIBRARIES} pthread cryptosqlite)
 endif()
