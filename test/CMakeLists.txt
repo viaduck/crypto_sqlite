@@ -30,5 +30,8 @@ if (GTEST_FOUND)
     add_executable(CryptoSQLite_Test ${TEST_SOURCE} ${TEST_INCLUDE})
 
     # add dependencies
-    target_link_libraries(CryptoSQLite_Test ${GTEST_BOTH_LIBRARIES} pthread cryptosqlite)
+    target_link_libraries(CryptoSQLite_Test ${GTEST_BOTH_LIBRARIES} cryptosqlite)
+    if (NOT ANDROID)
+        target_link_libraries(CryptoSQLite_Test pthread)
+    endif()
 endif()
