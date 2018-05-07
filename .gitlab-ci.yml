@@ -14,8 +14,8 @@ build:linux-x86_64:
     script:
         - mkdir build-linux-x86_64
         - cd build-linux-x86_64
-        - cmake ../ -DGTEST_SRC_DIR=/usr/src/googletest/
-        - make
+        - cmake -GNinja ../ -DGTEST_SRC_DIR=/usr/src/googletest/
+        - ninja
     artifacts:
         expire_in: 2h                   # do not pollute disk
         paths:
@@ -38,8 +38,8 @@ build:windows-x86_64:
     script:
         - mkdir build-windows-x86_64
         - cd build-windows-x86_64
-        - cmake ../ -DPREBUILT_BRANCH=x86_64-w64-mingw32 -DCMAKE_TOOLCHAIN_FILE=../external/icu-cmake/cmake-modules/toolchains/mingw64-x86_64.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
-        - make
+        - cmake -GNinja ../ -DPREBUILT_BRANCH=x86_64-w64-mingw32 -DCMAKE_TOOLCHAIN_FILE=../external/icu-cmake/cmake-modules/toolchains/mingw64-x86_64.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
+        - ninja
         - peldd test/CryptoSQLite_Test.exe | grep -vE '\.exe$' | xargs cp -t .
     artifacts:
         expire_in: 2h                   # do not pollute disk
@@ -64,8 +64,8 @@ build:android-arm64-v8a:
     script:
         - mkdir build-android-arm64-v8a
         - cd build-android-arm64-v8a
-        - cmake ../ -DPREBUILT_BRANCH=arm64-v8a-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=arm64-v8a -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
-        - make
+        - cmake -GNinja ../ -DPREBUILT_BRANCH=arm64-v8a-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=arm64-v8a -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
+        - ninja
         
 build:android-armeabi-v7a:
     image: viaduck/ci:android
@@ -73,8 +73,8 @@ build:android-armeabi-v7a:
     script:
         - mkdir build-android-armeabi-v7a
         - cd build-android-armeabi-v7a
-        - cmake ../ -DPREBUILT_BRANCH=armeabi-v7a-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=armeabi-v7a -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
-        - make
+        - cmake -GNinja ../ -DPREBUILT_BRANCH=armeabi-v7a-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=armeabi-v7a -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
+        - ninja
         
 build:android-x86:
     image: viaduck/ci:android
@@ -82,8 +82,8 @@ build:android-x86:
     script:
         - mkdir build-android-x86
         - cd build-android-x86
-        - cmake ../ -DPREBUILT_BRANCH=x86-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86 -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
-        - make
+        - cmake -GNinja ../ -DPREBUILT_BRANCH=x86-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86 -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
+        - ninja
         
 build:android-x86_64:
     image: viaduck/ci:android
@@ -91,5 +91,5 @@ build:android-x86_64:
     script:
         - mkdir build-android-x86_64
         - cd build-android-x86_64
-        - cmake ../ -DPREBUILT_BRANCH=x86_64-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86_64 -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
-        - make
+        - cmake -GNinja ../ -DPREBUILT_BRANCH=x86_64-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86_64 -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
+        - ninja
