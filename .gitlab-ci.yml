@@ -26,8 +26,8 @@ test:linux-x86_64:
         GIT_STRATEGY: none
     stage: test
     script:
-        - cd build-linux-x86_64
-        - test/CryptoSQLite_Test
+        - cd /tmp
+        - $OLDPWD/build-linux-x86_64/test/CryptoSQLite_Test
     dependencies:
     - build:linux-x86_64
 
