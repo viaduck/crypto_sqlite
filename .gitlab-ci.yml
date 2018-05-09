@@ -40,7 +40,7 @@ build:windows-x86_64:
         - cd build-windows-x86_64
         - cmake -GNinja ../ -DPREBUILT_BRANCH=x86_64-w64-mingw32 -DCMAKE_TOOLCHAIN_FILE=../external/icu-cmake/cmake-modules/toolchains/mingw64-x86_64.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
         - ninja
-        - peldd test/CryptoSQLite_Test.exe | grep -vE '\.exe$' | xargs cp -t .
+        - peldd -p "external/icu-cmake/icu_pre-prefix/src/icu_pre/lib" test/CryptoSQLite_Test.exe | grep -vE '\.exe$' | xargs cp -t .
     artifacts:
         expire_in: 2h                   # do not pollute disk
         paths:
