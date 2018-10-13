@@ -17,13 +17,12 @@
 #
 
 # set up cache variables
-set(SQLITE_VERSION "3200000" CACHE STRING "SQLite version string as used in the URL")
-set(SQLITE_YEAR "2017" CACHE STRING "SQLite year string as used in the URL")
-set(SQLITE_SHA1 "6786fced716237689cfa8212265967f28cef5de9" CACHE STRING
-        "SQLite amalgamation zip sha1 hash used to check the dowload")
+set(SQLITE_VERSION "3250200" CACHE STRING "SQLite version string as used in the URL")
+set(SQLITE_SHA256 "8dba212aeb7c25352a74d70141f20ba421bf20af8b2fb661f2b0dce473aba487" CACHE STRING
+        "SQLite amalgamation zip sha256 hash used to check the download")
 
 # build url from cache variables
-string(CONCAT SQLITE_URL "https://sqlite.org/" ${SQLITE_YEAR} "/sqlite-amalgamation-" ${SQLITE_VERSION} ".zip")
+string(CONCAT SQLITE_URL "https://mirror.viaduck.org/sqlite/sqlite-amalgamation-" ${SQLITE_VERSION} ".zip")
 string(CONCAT SQLITE_SUBDIR "sqlite-amalgamation-" ${SQLITE_VERSION})
 
 # find patch program to apply small patches to sqlite
@@ -39,7 +38,7 @@ file(GLOB_RECURSE PATCH_FILES ${CMAKE_CURRENT_SOURCE_DIR}/patches/*.patch)
 file(DOWNLOAD
         ${SQLITE_URL}
         ${CMAKE_CURRENT_SOURCE_DIR}/sqlite.zip
-        EXPECTED_HASH SHA1=${SQLITE_SHA1}
+        EXPECTED_HASH SHA256=${SQLITE_SHA256}
         SHOW_PROGRESS
         )
 

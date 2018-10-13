@@ -6,7 +6,7 @@ stages:
 
 variables:
     GIT_SUBMODULE_STRATEGY: recursive
-    ANDROID_PLATFORM: "android-26"
+    ANDROID_PLATFORM: "android-27"
     ANDROID_NDK: "/android/ndk"
     
 build:linux-x86_64:
