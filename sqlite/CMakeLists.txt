@@ -17,8 +17,8 @@
 #
 
 # set up cache variables
-set(SQLITE_VERSION "3250200" CACHE STRING "SQLite version string as used in the URL")
-set(SQLITE_SHA256 "8dba212aeb7c25352a74d70141f20ba421bf20af8b2fb661f2b0dce473aba487" CACHE STRING
+set(SQLITE_VERSION "3250300" CACHE STRING "SQLite version string as used in the URL")
+set(SQLITE_SHA256 "2ad5379f3b665b60599492cc8a13ac480ea6d819f91b1ef32ed0e1ad152fafef" CACHE STRING
         "SQLite amalgamation zip sha256 hash used to check the download")
 
 # build url from cache variables
