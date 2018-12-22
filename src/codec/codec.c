@@ -24,6 +24,8 @@
 
 static void *g_codec = NULL;
 
+#define UNUSED(x) x __attribute__((__unused__))
+
 int sqlite3PagerReadFileheader(Pager *pPager, int N, unsigned char *pDest) {
     // if no codec was set, pass through to original
     if (NULL == g_codec)
@@ -96,13 +98,13 @@ void* sqlite3Codec(void* codec, void* data, Pgno pageNum, int mode) {
     return data;
 }
 
-void sqlite3_activate_see(const char* info) { }
+void sqlite3_activate_see(const char* UNUSED(info)) { }
 
 void sqlite3PagerFreeCodec(void* codec) {
     codecDelete(codec);
 }
 
-void sqlite3CodecSizeChange(void* codec, int pageSize, int reserve) {
+void sqlite3CodecSizeChange(void* codec, int pageSize, int UNUSED(reserve)) {
     codecSetPageSize(codec, pageSize);
 }
 
@@ -164,17 +166,17 @@ int sqlite3_key(sqlite3* db, const void* zKey, int nKey) {
     return sqlite3CodecAttach(db, 0, zKey, nKey);
 }
 
-int sqlite3_rekey_v2(sqlite3* db, const char* zDbName, const void* zKey, int nKey) {
+int sqlite3_rekey_v2(sqlite3* db, const char* UNUSED(zDbName), const void* zKey, int nKey) {
     //We don't use zDbName (though maybe we could...). Pass-through to the old sqlite_rekey
     return sqlite3_rekey(db, zKey, nKey);
 }
 
-int sqlite3_key_v2(sqlite3* db, const char* zDbName, const void* zKey, int nKey) {
+int sqlite3_key_v2(sqlite3* db, const char* UNUSED(zDbName), const void* zKey, int nKey) {
     //We don't use zDbName (though maybe we could...). Pass-through to the old sqlite_key
     return sqlite3_key(db, zKey, nKey);
 }
 
-void sqlite3CodecGetKey(sqlite3* db, int nDb, void** zKey, int* nKey) {
+void sqlite3CodecGetKey(sqlite3* UNUSED(db), int UNUSED(nDb), void** zKey, int* nKey) {
     // The unencrypted password is not stored for security reasons therefore always return NULL
     *zKey = NULL;
     *nKey = -1;
