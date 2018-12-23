@@ -62,6 +62,7 @@ build:android-arm64-v8a:
     image: viaduck/ci:android
     stage: build
     script:
+        - cat $ANDROID_NDK/version.txt
         - mkdir build-android-arm64-v8a
         - cd build-android-arm64-v8a
         - cmake -GNinja ../ -DPREBUILT_BRANCH=arm64-v8a-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=arm64-v8a -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
@@ -71,6 +72,7 @@ build:android-armeabi-v7a:
     image: viaduck/ci:android
     stage: build
     script:
+        - cat $ANDROID_NDK/version.txt
         - mkdir build-android-armeabi-v7a
         - cd build-android-armeabi-v7a
         - cmake -GNinja ../ -DPREBUILT_BRANCH=armeabi-v7a-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=armeabi-v7a -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
@@ -80,6 +82,7 @@ build:android-x86:
     image: viaduck/ci:android
     stage: build
     script:
+        - cat $ANDROID_NDK/version.txt
         - mkdir build-android-x86
         - cd build-android-x86
         - cmake -GNinja ../ -DPREBUILT_BRANCH=x86-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86 -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
@@ -89,6 +92,7 @@ build:android-x86_64:
     image: viaduck/ci:android
     stage: build
     script:
+        - cat $ANDROID_NDK/version.txt
         - mkdir build-android-x86_64
         - cd build-android-x86_64
         - cmake -GNinja ../ -DPREBUILT_BRANCH=x86_64-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86_64 -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
