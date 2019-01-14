@@ -43,7 +43,7 @@ file(GLOB_RECURSE CS_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/include/*)
 file(GLOB_RECURSE CS_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*)
 
 # set up library target
-add_library(cryptosqlite ${CS_INCLUDES} ${CS_SOURCES})
+add_library(cryptosqlite STATIC ${CS_INCLUDES} ${CS_SOURCES})
 
 # compile options
 target_compile_options(cryptosqlite PRIVATE -Wall -Wextra)
