@@ -16,6 +16,8 @@
 # along with cryptoSQLite.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+include(ApplyPatches)
+
 # set up cache variables
 set(SQLITE_VERSION "3260000" CACHE STRING "SQLite version string as used in the URL")
 set(SQLITE_SHA256 "de5dcab133aa339a4cf9e97c40aa6062570086d6085d8f9ad7bc6ddf8a52096e" CACHE STRING
@@ -39,11 +41,9 @@ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR})
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar x sqlite.zip
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
+    # apply our patches to sqlite
+    ApplyPatches(SQLITE "${CMAKE_CURRENT_SOURCE_DIR}/patches/*.patch" "${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR}")
 endif()
-
-# apply our patches to sqlite
-include(ApplyPatches)
-ApplyPatches(SQLITE "${CMAKE_CURRENT_SOURCE_DIR}/patches/*.patch" "${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR}")
 
 # find files just downloaded
 file(GLOB_RECURSE SQ_FILES ${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR}/*)
