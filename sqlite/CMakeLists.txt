@@ -42,7 +42,7 @@ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR})
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
     # apply our patches to sqlite
-    ApplyPatches(SQLITE "${CMAKE_CURRENT_SOURCE_DIR}/patches/*.patch" "${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR}")
+    ApplyPatches("${CMAKE_CURRENT_SOURCE_DIR}/patches/*.patch" "${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR}")
 endif()
 
 # find files just downloaded
