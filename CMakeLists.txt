@@ -20,7 +20,7 @@ cmake_minimum_required(VERSION 3.1)
 project(cryptoSQLite)
 
 # set cmake module path
-list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/external/securememory/cmake-modules")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/securememory/cmake-modules")
 
 # enable and require c++11
 set(CMAKE_CXX_STANDARD 11)

@@ -25,15 +25,6 @@ set(SQLITE_SHA256 "de5dcab133aa339a4cf9e97c40aa6062570086d6085d8f9ad7bc6ddf8a520
 string(CONCAT SQLITE_URL "https://mirror.viaduck.org/sqlite/sqlite-amalgamation-" ${SQLITE_VERSION} ".zip")
 string(CONCAT SQLITE_SUBDIR "sqlite-amalgamation-" ${SQLITE_VERSION})
 
-# find patch program to apply small patches to sqlite
-find_program(PATCH_PROGRAM patch)
-if (NOT PATCH_PROGRAM)
-    message(FATAL_ERROR "Cannot find patch utility.")
-endif()
-
-# find all patch files
-file(GLOB_RECURSE PATCH_FILES ${CMAKE_CURRENT_SOURCE_DIR}/patches/*.patch)
-
 # download amalgamation zip with hash check
 file(DOWNLOAD
         ${SQLITE_URL}
@@ -44,18 +35,15 @@ file(DOWNLOAD
 
 # unpack zip only if needed
 if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR})
-
     # unpack the amalgamation zip in current dir
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar x sqlite.zip
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
-    foreach(PATCH_FILE ${PATCH_FILES})
-        # apply each patch subsequently
-        execute_process(COMMAND ${PATCH_PROGRAM} -p1 -i ${PATCH_FILE}
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR}/)
-    endforeach()
-
 endif()
+
+# apply our patches to sqlite
+include(ApplyPatches)
+ApplyPatches(SQLITE "${CMAKE_CURRENT_SOURCE_DIR}/patches/*.patch" "${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR}")
 
 # find files just downloaded
 file(GLOB_RECURSE SQ_FILES ${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR}/*)
