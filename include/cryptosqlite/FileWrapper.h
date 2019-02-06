@@ -73,10 +73,10 @@ public:
         // tell size
         long fsizel = ftell(mFile);
 
-        if (fsizel < 0 || fsizel > std::numeric_limits<uint32_t>::max())
+        if (fsizel < 0)
             throw cryptosqlite_exception("ftell failed");
 
-        uint32_t fsize = static_cast<uint32_t>(fsizel);
+        auto fsize = static_cast<uint32_t>(fsizel);
 
         // rewind <<
         fseek(mFile, 0, SEEK_SET);

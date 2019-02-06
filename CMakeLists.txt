@@ -46,7 +46,14 @@ file(GLOB_RECURSE CS_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*)
 add_library(cryptosqlite STATIC ${CS_INCLUDES} ${CS_SOURCES})
 
 # compile options
-target_compile_options(cryptosqlite PRIVATE -Wall -Wextra)
+target_compile_options(cryptosqlite PRIVATE
+    -Wall
+    -Wextra
+    -Wno-sign-compare
+    -Wno-unused-parameter
+    -Wno-implicit-fallthrough
+    -Wno-unused-function
+    )
 
 # link options
 target_link_libraries(cryptosqlite SecureMemory icu)
@@ -89,8 +96,6 @@ target_compile_definitions(cryptosqlite PUBLIC
         -DSQLITE_ENABLE_ICU
         # Enable JSON extension support
         -DSQLITE_ENABLE_JSON1
-
-        -DSQLITE_DEBUG
         )
 
 if (WIN32)
