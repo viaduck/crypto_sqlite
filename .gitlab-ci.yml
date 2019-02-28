@@ -78,14 +78,14 @@ build:android-armeabi-v7a:
         - cmake -GNinja ../ -DPREBUILT_BRANCH=armeabi-v7a-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=armeabi-v7a -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
         - ninja
         
-build:android-x86:
+build:android-i686:
     image: viaduck/ci:android
     stage: build
     script:
         - cat $ANDROID_NDK/version.txt
-        - mkdir build-android-x86
-        - cd build-android-x86
-        - cmake -GNinja ../ -DPREBUILT_BRANCH=x86-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86 -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
+        - mkdir build-android-i686
+        - cd build-android-i686
+        - cmake -GNinja ../ -DPREBUILT_BRANCH=i686-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86 -DANDROID_TOOLCHAIN=clang -DANDROID_STL=c++_shared -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
         - ninja
         
 build:android-x86_64:
