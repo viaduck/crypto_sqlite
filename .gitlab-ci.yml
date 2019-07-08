@@ -36,6 +36,8 @@ build:windows-x86_64:
     image: viaduck/ci:mingw
     stage: build
     script:
+        - update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix        # fix c++11 threading support on debian
+        - update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
         - mkdir build-windows-x86_64
         - cd build-windows-x86_64
         - cmake -GNinja ../ -DPREBUILT_BRANCH=x86_64-w64-mingw32 -DCMAKE_TOOLCHAIN_FILE=../external/icu-cmake/cmake-modules/toolchains/mingw64-x86_64.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
