@@ -19,19 +19,19 @@
 include(ApplyPatches)
 
 # set up cache variables
-set(SQLITE_VERSION "3280000" CACHE STRING "SQLite version string as used in the URL")
-set(SQLITE_SHA256 "d02fc4e95cfef672b45052e221617a050b7f2e20103661cda88387349a9b1327" CACHE STRING
+set(SQLITE_BUILD_VERSION "3290000" CACHE STRING "SQLite version string as used in the URL")
+set(SQLITE_BUILD_HASH "48253d8f1616f213422e4374cff39050488d2497812d9bbb8609524127d45732" CACHE STRING
         "SQLite amalgamation zip sha256 hash used to check the download")
 
 # build url from cache variables
-string(CONCAT SQLITE_URL "https://mirror.viaduck.org/sqlite/sqlite-amalgamation-" ${SQLITE_VERSION} ".zip")
-string(CONCAT SQLITE_SUBDIR "sqlite-amalgamation-" ${SQLITE_VERSION})
+set(SQLITE_URL "https://mirror.viaduck.org/sqlite/sqlite-amalgamation-${SQLITE_BUILD_VERSION}.zip")
+set(SQLITE_SUBDIR "sqlite-amalgamation-${SQLITE_BUILD_VERSION}")
 
 # download amalgamation zip with hash check
 file(DOWNLOAD
         ${SQLITE_URL}
         ${CMAKE_CURRENT_SOURCE_DIR}/sqlite.zip
-        EXPECTED_HASH SHA256=${SQLITE_SHA256}
+        EXPECTED_HASH SHA256=${SQLITE_BUILD_HASH}
         SHOW_PROGRESS
         )
 
