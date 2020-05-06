@@ -2,6 +2,7 @@ image: viaduck/ci
 
 stages:
     - build
+    - lint
     - test
 
 variables:
@@ -19,8 +20,16 @@ build:linux-x86_64:
     artifacts:
         expire_in: 2h                   # do not pollute disk
         paths:
-        - build-linux-x86_64/
-        
+            - build-linux-x86_64/
+
+lint:linux-x86_64:
+    stage: lint
+    script:
+        - vd-lint cryptoSQLite $PWD
+    needs:
+        - job: build:linux-x86_64
+          artifacts: false
+
 test:linux-x86_64:
     variables:
         GIT_STRATEGY: none
@@ -28,9 +37,8 @@ test:linux-x86_64:
     script:
         - cd /tmp
         - $OLDPWD/build-linux-x86_64/test/CryptoSQLite_Test
-    dependencies:
-    - build:linux-x86_64
-
+    needs:
+        - build:linux-x86_64
 
 build:windows-x86_64:
     image: viaduck/ci:mingw
@@ -46,7 +54,7 @@ build:windows-x86_64:
     artifacts:
         expire_in: 2h                   # do not pollute disk
         paths:
-        - build-windows-x86_64/
+            - build-windows-x86_64/
         
 test:windows-x86_64:
     variables:
@@ -55,10 +63,10 @@ test:windows-x86_64:
         - cd build-windows-x86_64
         - test\CryptoSQLite_Test.exe             # runs gtest target
     stage: test
-    dependencies:
-    - build:windows-x86_64
+    needs:
+        - build:windows-x86_64
     tags:
-    - windows
+        - windows
 
 build:android-arm64-v8a:
     image: viaduck/ci:android
