@@ -110,12 +110,6 @@ else()
             )
 endif()
 
-# add public codec definition to publics
-target_compile_definitions(cryptosqlite PUBLIC
-        # encryption layer added as codec
-        -DSQLITE_HAS_CODEC
-        )
-
 # export includes to other targets
 target_include_directories(cryptosqlite PUBLIC
         ${SQLITE_INCLUDES}

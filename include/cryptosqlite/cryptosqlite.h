@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2018 The ViaDuck Project
+ * Copyright (C) 2017-2020 The ViaDuck Project
  *
  * This file is part of cryptoSQLite.
  *
@@ -17,19 +17,44 @@
  * along with cryptoSQLite.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CRYPTOSQLITE_CRYPTOSQLITE_H_H
-#define CRYPTOSQLITE_CRYPTOSQLITE_H_H
+#ifndef CRYPTOSQLITE_CRYPTOSQLITE_H
+#define CRYPTOSQLITE_CRYPTOSQLITE_H
+
+#include <memory>
+#include <functional>
+#include <secure_memory/Buffer.h>
+#include <cryptosqlite/crypto/IDataCrypt.h>
 
 class cryptosqlite_exception : public std::runtime_error {
 public:
     explicit cryptosqlite_exception(const std::string &msg) : std::runtime_error(msg) { }
 };
 
-extern "C" {
-#include <sqlite3.h>
-SQLITE_API void sqlite3_prepare_open_encrypted(const char *zFilename, const void *zKey, int nKey);
-SQLITE_API int sqlite3_open_encrypted(const char *zFilename, sqlite3 **ppDb, const void *zKey, int nKey);
-SQLITE_API int sqlite3_rekey_encrypted(const char *zFilename, const void *zKeyOld, int nKeyOld, const void *zKeyNew, int nKeyNew);
+class cryptosqlite {
+public:
+    using CryptoFactory = std::function<void(std::unique_ptr<IDataCrypt>&)>;
+
+    static void setCryptoFactory(CryptoFactory factory) {
+        sFactoryCrypt = std::move(factory);
+    }
+
+    static void makeDataCrypt(std::unique_ptr<IDataCrypt> &out) {
+        if (!sFactoryCrypt)
+            throw cryptosqlite_exception("No crypto factory set.");
+
+        sFactoryCrypt(out);
+    }
+
+protected:
+    static CryptoFactory sFactoryCrypt;
 };
 
-#endif //CRYPTOSQLITE_CRYPTOSQLITE_H_H
+extern "C" {
+#include <sqlite3.h>
+SQLITE_API void sqlite3_prepare_open_encrypted();
+SQLITE_API int sqlite3_open_encrypted(const char *zFilename, sqlite3 **ppDb, const void *zKey, int nKey);
+SQLITE_API int sqlite3_rekey_encrypted(const char *zFilename, const void *zKeyOld, int nKeyOld, const void *zKeyNew, int nKeyNew);
+SQLITE_API int sqlite3_key(sqlite3* db, const void* zKey, int nKey);
+};
+
+#endif //CRYPTOSQLITE_CRYPTOSQLITE_H

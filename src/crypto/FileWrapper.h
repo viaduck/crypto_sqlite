@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2018 The ViaDuck Project
+ * Copyright (C) 2017-2020 The ViaDuck Project
  *
  * This file is part of cryptoSQLite.
  *
@@ -93,6 +93,5 @@ protected:
     FILE *mFile;
     bool mEmpty = false;
 };
-
 
 #endif //CRYPTOSQLITE_KEYFILE_H

@@ -22,15 +22,14 @@
 
 #include <gtest/gtest.h>
 #include <sqlite3.h>
-#include <cryptosqlite/Codec.h>
-#include <cryptosqlite/encryption/PlaintextCrypt.h>
+#include <cryptosqlite/crypto/PlaintextCrypt.h>
 #include "TestCrypt.h"
 
 class BasicTest : public ::testing::Test {
 protected:
     virtual void SetUp() override {
         std::remove("test.db");
-        std::remove("test.db.keyfile");
+        std::remove("test.db-keyfile");
     }
 
     void testReadWrite(const char *key, int keylen, bool transact = false, int insertCount = 1000) {

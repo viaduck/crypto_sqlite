@@ -17,9 +17,11 @@
  * along with cryptoSQLite.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "BasicTest.h"
+
 #include <secure_memory/String.h>
 #include <cryptosqlite/cryptosqlite.h>
-#include "BasicTest.h"
+#include <cryptosqlite/crypto/PlaintextCrypt.h>
 
 #define ASSERT_OK(x) ASSERT_EQ(SQLITE_OK, (x))
 #define ASSERT_DONE(x) ASSERT_EQ(SQLITE_DONE, (x))
@@ -33,7 +35,7 @@ TEST_F(BasicTest, testNoPWTransact) {
 }
 
 TEST_F(BasicTest, testPlaintext) {
-    Codec::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
+    cryptosqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
         crypt.reset(new PlaintextCrypt());
     });
 
@@ -44,7 +46,7 @@ TEST_F(BasicTest, testPlaintext) {
 }
 
 TEST_F(BasicTest, testPlaintextTransact) {
-    Codec::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
+    cryptosqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
         crypt.reset(new PlaintextCrypt());
     });
 
@@ -55,7 +57,7 @@ TEST_F(BasicTest, testPlaintextTransact) {
 }
 
 TEST_F(BasicTest, testPlaintextTransactRekey) {
-    Codec::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
+    cryptosqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
         crypt.reset(new PlaintextCrypt());
     });
 
@@ -68,7 +70,7 @@ TEST_F(BasicTest, testPlaintextTransactRekey) {
 }
 
 TEST_F(BasicTest, testTestCrypt) {
-    Codec::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
+    cryptosqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
         crypt.reset(new TestCrypt());
     });
 
@@ -79,7 +81,7 @@ TEST_F(BasicTest, testTestCrypt) {
 }
 
 TEST_F(BasicTest, testTestCryptTransact) {
-    Codec::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
+    cryptosqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
         crypt.reset(new TestCrypt());
     });
 
@@ -90,7 +92,7 @@ TEST_F(BasicTest, testTestCryptTransact) {
 }
 
 TEST_F(BasicTest, testTestCryptTransactRekey) {
-    Codec::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
+    cryptosqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
         crypt.reset(new TestCrypt());
     });
 

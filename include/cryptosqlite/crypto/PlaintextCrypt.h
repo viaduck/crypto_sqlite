@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2018 The ViaDuck Project
+ * Copyright (C) 2017-2020 The ViaDuck Project
  *
  * This file is part of cryptoSQLite.
  *
@@ -23,27 +23,22 @@
 #include <cstring>
 #include <secure_memory/Buffer.h>
 #include <secure_memory/BufferRange.h>
-#include <cryptosqlite/encryption/IDataCrypt.h>
+#include <cryptosqlite/crypto/IDataCrypt.h>
 
 class PlaintextCrypt : public IDataCrypt {
 public:
-    void encrypt(uint32_t, const Buffer &source, Buffer &destination) const override {
+    void encrypt(uint32_t, const Buffer &source, Buffer &destination, const Buffer &) const override {
         destination.write(source, 0);
     }
-
-    void decrypt(uint32_t, const Buffer &source, Buffer &destination) const override {
-        destination.write(source, 0);
+    void decrypt(uint32_t page, const Buffer &source, Buffer &destination, const Buffer &key) const override {
+        encrypt(page, source, destination, key);
     }
 
     void generateKey(Buffer &) const override { }
+    void unwrapKey(Buffer &, const Buffer &, const Buffer &) const override { }
+    void wrapKey(Buffer &, const Buffer &, const Buffer &) const override { }
 
-    void encryptKeyFile(Buffer &destination, const Buffer &header, const Buffer &) const override {
-        destination.write(header, 0);
-    }
-
-    void decryptKeyFile(const Buffer &source, Buffer &destHeader, Buffer &) const override {
-        destHeader.write(source, 0);
-    }
+    uint32_t extraSize() const override { return 0; }
 };
 
 

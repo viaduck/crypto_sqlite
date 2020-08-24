@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018 The ViaDuck Project
+# Copyright (c) 2017-2020 The ViaDuck Project
 #
 # This file is part of cryptoSQLite.
 #
@@ -19,8 +19,8 @@
 include(ApplyPatches)
 
 # set up cache variables
-set(SQLITE_BUILD_VERSION "3320200" CACHE STRING "SQLite version string as used in the URL")
-set(SQLITE_BUILD_HASH "7e1ebd182a61682f94b67df24c3e6563ace182126139315b659f25511e2d0b5d" CACHE STRING
+set(SQLITE_BUILD_VERSION "3320300" CACHE STRING "SQLite version string as used in the URL")
+set(SQLITE_BUILD_HASH "e9cec01d4519e2d49b3810615237325263fe1feaceae390ee12b4a29bd73dbe2" CACHE STRING
         "SQLite amalgamation zip sha256 hash used to check the download")
 
 # build url from cache variables

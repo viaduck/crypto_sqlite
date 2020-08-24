@@ -30,18 +30,17 @@ TEST_F(CryptoTest, testTestCrypt) {
     String key("asjlkaslkajs");
 
     TestCrypt testCrypt;
-    testCrypt.cryptKey(key);
 
     // Test root page encrypt / decrypt
     Buffer tmp;
-    ASSERT_NO_THROW(testCrypt.encrypt(1, test1, tmp));
-    ASSERT_NO_THROW(testCrypt.decrypt(1, tmp, test2));
+    ASSERT_NO_THROW(testCrypt.encrypt(1, test1, tmp, key));
+    ASSERT_NO_THROW(testCrypt.decrypt(1, tmp, test2, key));
 
     ASSERT_EQ(test1, test2);
 
     // test normal page encrypt / decrypt
-    ASSERT_NO_THROW(testCrypt.encrypt(2, test1, tmp));
-    ASSERT_NO_THROW(testCrypt.decrypt(2, tmp, test2));
+    ASSERT_NO_THROW(testCrypt.encrypt(2, test1, tmp, key));
+    ASSERT_NO_THROW(testCrypt.decrypt(2, tmp, test2, key));
 
     ASSERT_EQ(test1, test2);
 }
