@@ -44,7 +44,7 @@ class File {
 public:
     /* Constructor/destructor can not be used because sqlite3 manages this memory */
 
-    int attach(sqlite3 *db, int nDB, const void *zKey, int nKey);
+    int attach(sqlite3 *db, int nDB);
 
     int close();
     int read(void* buffer, int count, sqlite3_int64 offset);

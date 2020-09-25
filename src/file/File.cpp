@@ -45,27 +45,12 @@ sqlite3_io_methods File::gSQLiteIOMethods = {
         sIoUnfetch,                /* xUnfetch */
 };
 
-int File::attach(sqlite3 *db, int nDb, const void *zKey, int nKey) {
+int File::attach(sqlite3 *db, int nDb) {
     // lock while modifying page size
     SQLite3Mutex mutex(csqlite3_get_mutex(db));
     SQLite3LockGuard lock(mutex);
 
-    // no key specified, either attached DB or no encryption
-    if (!zKey || nKey <= 0) {
-        // attached DB, use main DB's key
-        if (0 != nDb && nKey < 0) {
-            // TODO: get crypto of main DB
-            void *pMainCrypto = nullptr;
-
-            // main DB is encrypted -> encrypt attached DB using duplicate codec
-            if (pMainCrypto) {
-                ; // TODO: duplicate pMainCrypto here
-            }
-        }
-    } else {
-        // key specified
-        mCrypto = new Crypto(mFileName, zKey, nKey, mExists);
-    }
+    // TODO: add support for attached dbs
 
     // Set page size to its default, but add our size to be reserved at the end of the page
     csqlite3_reserve_page(db, nDb, &mPageSize, mCrypto->extraSize());
@@ -153,9 +138,12 @@ int File::write(const void *buffer, int count, sqlite3_int64 offset) {
 int File::readMainDB(void *buffer, int count, sqlite3_int64 offset) {
     int rv = SQLITE_OK;
 
-    // special case: read 16 byte salt from beginning of DB unencrypted
-    if (offset == 0 && count == 16)
+    // special case: read database header
+    if (offset == 0 && count < 512 && mPageSize == 0) {
+        mCrypto->decryptFirstPageCache();
+        memcpy(buffer, mCrypto->pageBufferOut(), count);
         return rv;
+    }
 
     // prepare values
     int dOffset = offset % mPageSize;

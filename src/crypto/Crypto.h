@@ -24,23 +24,31 @@
 class Crypto {
 public:
     Crypto(const std::string &dbFileName, const void *fileKey, int keylen, int exists);
-    void writeKey(const std::string &dbFileName, const void *fileKey, int keylen);
-    void readKey(const std::string &dbFileName, const void *fileKey, int keylen);
 
+    void rekey(const void *newFileKey, int keylen);
     const void *encryptPage(const void *pageIn, uint32_t pageSize, int pageNo);
     void decryptPage(void *pageInOut, uint32_t pageSize, int pageNo);
+    void decryptFirstPageCache();
 
     uint32_t extraSize();
 
-    void resizePageBuffers(uint32_t size) {
-        mPageBufferIn.padd(size, 0);
-        mPageBufferOut.padd(size, 0);
-    }
+    void resizePageBuffers(uint32_t size);
     uint8_t *pageBufferIn() { return static_cast<uint8_t *>(mPageBufferIn.data()); }
     const uint8_t *pageBufferOut() { return static_cast<const uint8_t *>(mPageBufferOut.const_data()); }
 
 protected:
+    void wrapKey(const void *fileKey, int keylen);
+    void unwrapKey(const void *fileKey, int keylen);
+    void writeKeyFile();
+    void readKeyFile();
+
+    // extern crypto plugin
     std::unique_ptr<IDataCrypt> mDataCrypt;
+    // keyfile name
+    std::string mFileName;
+    // cache
+    Buffer mWrappedKey, mFirstPage;
+    // state, input, output
     Buffer mKey, mPageBufferIn, mPageBufferOut;
 };
 

@@ -29,7 +29,34 @@ public:
         return &sInstance;
     }
 
+    /**
+     * Call before opening main db to prepare reading the encrypted file header
+     * Sets this VFS as default. Only one db can be prepared at a time
+     *
+     * @param zKey Optional key pointer
+     * @param nKey Optional key size
+     */
+    void prepare(const void *zKey, int nKey);
+
+    /**
+     * Automatically called on opening any file (db, journal, wal, ...)
+     *
+     * @param zName Optional file name
+     * @param pFile Pointer to preallocated file structure(s)
+     * @param flags Opening flags
+     * @param pOutFlags Return flags
+     * @return Standard sqlite error code
+     */
     int open(const char* zName, sqlite3_file* pFile, int flags, int* pOutFlags);
+
+    /**
+     * Call after opening the main db to finish setup and clean up resources
+     * Removes this VFS as default.
+     *
+     * @param db Database pointer that was just opened
+     * @param nDb Database number for attached databases
+     */
+    void finish();
 
     sqlite3_vfs *base() {
         return &mBase;
@@ -50,6 +77,8 @@ protected:
     sqlite3_vfs *mUnderlying;
     SQLite3Mutex mMutex;
     std::vector<File *> mDBs;
+    const void *mFileKey;
+    int mFileKeySize;
 
     static VFS sInstance;
 };

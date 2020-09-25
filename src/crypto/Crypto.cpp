@@ -21,36 +21,60 @@
 #include "FileWrapper.h"
 #include <cryptosqlite/cryptosqlite.h>
 
-Crypto::Crypto(const std::string &dbFileName, const void *fileKey, int keylen, int exists) {
+Crypto::Crypto(const std::string &dbFileName, const void *fileKey, int keylen, int exists)
+        : mFileName(dbFileName + "-keyfile") {
     cryptosqlite::makeDataCrypt(mDataCrypt);
 
     if (!exists) {
-        // generate new key and wrap it to file
+        // generate new key and wrap it to buffer
         mDataCrypt->generateKey(mKey);
-        writeKey(dbFileName, fileKey, keylen);
+        wrapKey(fileKey, keylen);
     }
     else {
-        // read existing key and unwrap it
-        readKey(dbFileName, fileKey, keylen);
+        // read existing keyfile and unwrap key
+        readKeyFile();
+        unwrapKey(fileKey, keylen);
     }
 }
 
-void Crypto::writeKey(const std::string &dbFileName, const void *fileKey, int keylen) {
-    Buffer wrappingKey, wrappedKey;
-    wrappingKey.write(fileKey, keylen, 0);
-
-    FileWrapper keyfile(dbFileName + "-keyfile");
-    mDataCrypt->wrapKey(wrappedKey, mKey, wrappingKey);
-    keyfile.writeFile(wrappedKey);
+void Crypto::rekey(const void *newFileKey, int keylen) {
+    wrapKey(newFileKey, keylen);
+    writeKeyFile();
 }
 
-void Crypto::readKey(const std::string &dbFileName, const void *fileKey, int keylen) {
-    Buffer wrappingKey, wrappedKey;
+void Crypto::wrapKey(const void *fileKey, int keylen) {
+    Buffer wrappingKey;
     wrappingKey.write(fileKey, keylen, 0);
 
-    FileWrapper keyfile(dbFileName + "-keyfile");
-    keyfile.readFile(wrappedKey);
-    mDataCrypt->unwrapKey(mKey, wrappedKey, wrappingKey);
+    mWrappedKey.clear();
+    mDataCrypt->wrapKey(mWrappedKey, mKey, wrappingKey);
+}
+
+void Crypto::unwrapKey(const void *fileKey, int keylen) {
+    Buffer wrappingKey;
+    wrappingKey.write(fileKey, keylen, 0);
+
+    mKey.clear();
+    mDataCrypt->unwrapKey(mKey, mWrappedKey, wrappingKey);
+}
+
+void Crypto::writeKeyFile() {
+    Buffer content;
+    mWrappedKey.serialize(content);
+    mFirstPage.serialize(content);
+
+    FileWrapper keyfile(mFileName);
+    keyfile.writeFile(content);
+}
+
+void Crypto::readKeyFile() {
+    Buffer content;
+    FileWrapper keyfile(mFileName);
+    keyfile.readFile(content);
+
+    BufferRangeConst chain(content);
+    mWrappedKey.deserialize(chain);
+    mFirstPage.deserialize(chain);
 }
 
 const void *Crypto::encryptPage(const void *page, uint32_t pageSize, int pageNo) {
@@ -58,7 +82,13 @@ const void *Crypto::encryptPage(const void *page, uint32_t pageSize, int pageNo)
     mPageBufferIn.write(page, pageSize, 0);
     // encrypt to output buffer
     mDataCrypt->encrypt(pageNo, mPageBufferIn, mPageBufferOut, mKey);
-    // replace pointer to point to ciphertext
+    // cache encrypted first page and write it to keyfile
+    if (pageNo == 1) {
+        mFirstPage.clear();
+        mFirstPage.write(mPageBufferOut, 0);
+        writeKeyFile();
+    }
+    // return pointer to point to ciphertext
     return pageBufferOut();
 }
 
@@ -69,6 +99,21 @@ void Crypto::decryptPage(void *pageInOut, uint32_t pageSize, int pageNo) {
     mDataCrypt->decrypt(pageNo, mPageBufferIn, mPageBufferOut, mKey);
     // overwrite ciphertext with plaintext
     if (pageInOut) memcpy(pageInOut, pageBufferOut(), pageSize);
+}
+
+void Crypto::decryptFirstPageCache() {
+    // fit page buffers to cache or minimum page size if cache empty
+    resizePageBuffers(std::max(mFirstPage.size(), 512u));
+    // decrypt first page from cache or leave 0-bytes if cache empty
+    if (mFirstPage.size() > 0) mDataCrypt->decrypt(1, mFirstPage, mPageBufferOut, mKey);
+}
+
+void Crypto::resizePageBuffers(uint32_t size) {
+    mPageBufferIn.clear();
+    mPageBufferIn.padd(size, 0);
+
+    mPageBufferOut.clear();
+    mPageBufferOut.padd(size, 0);
 }
 
 uint32_t Crypto::extraSize() {

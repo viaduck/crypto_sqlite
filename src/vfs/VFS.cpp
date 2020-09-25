@@ -53,6 +53,14 @@ VFS::VFS() : mBase() {
     };
 }
 
+void VFS::prepare(const void *zKey, int nKey) {
+    // make custom VFS default before opening
+    sqlite3_vfs_register(base(), 1);
+    // cache key in instance for open()
+    mFileKey = zKey;
+    mFileKeySize = nKey;
+}
+
 int VFS::open(const char *zName, sqlite3_file *pFile, int flags, int *pOutFlags) {
     auto *db = reinterpret_cast<File *>(pFile);
 
@@ -66,10 +74,14 @@ int VFS::open(const char *zName, sqlite3_file *pFile, int flags, int *pOutFlags)
 
     if (zName) {
         switch (flags & SQLITE_OPEN_MASK) {
+            /** Contains only administrative information, no encryption necessary. **/
             case SQLITE_OPEN_MASTER_JOURNAL:
-                /** Contains only administrative information, no encryption necessary. **/
-            case SQLITE_OPEN_MAIN_DB:
             case SQLITE_OPEN_TEMP_DB:
+                break;
+
+            case SQLITE_OPEN_MAIN_DB:
+                VFS_FORWARD(this, xAccess, zName, SQLITE_ACCESS_EXISTS, &db->mExists);
+                db->mCrypto = new Crypto(db->mFileName, mFileKey, mFileKeySize, db->mExists);
                 break;
 
             case SQLITE_OPEN_MAIN_JOURNAL:
@@ -93,12 +105,17 @@ int VFS::open(const char *zName, sqlite3_file *pFile, int flags, int *pOutFlags)
     if (ret == SQLITE_OK) {
         pFile->pMethods = &File::gSQLiteIOMethods;
 
-        if (flags & SQLITE_OPEN_MAIN_DB) {
-            VFS_FORWARD(this, xAccess, zName, SQLITE_ACCESS_EXISTS, &db->mExists);
+        if (flags & SQLITE_OPEN_MAIN_DB)
             addDatabase(db);
-        }
     }
     return ret;
+}
+
+void VFS::finish() {
+    mFileKey = nullptr;
+    mFileKeySize = 0;
+    // unregister custom VFS after opening
+    sqlite3_vfs_unregister(VFS::instance()->base());
 }
 
 File *VFS::findMainDatabase(const char *name) {

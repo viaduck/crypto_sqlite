@@ -22,9 +22,8 @@
 
 cryptosqlite::CryptoFactory cryptosqlite::sFactoryCrypt;
 
-void sqlite3_prepare_open_encrypted() {
-    // make custom VFS default before opening
-    sqlite3_vfs_register(VFS::instance()->base(), 1);
+void sqlite3_prepare_open_encrypted(const void *zKey, int nKey) {
+    VFS::instance()->prepare(zKey, nKey);
 }
 
 int sqlite3_open_encrypted(const char *zFilename, sqlite3 **ppDb, const void *zKey, int nKey) {
@@ -33,11 +32,11 @@ int sqlite3_open_encrypted(const char *zFilename, sqlite3 **ppDb, const void *zK
         return sqlite3_open(zFilename, ppDb);
 
     // prepare the call to open
-    sqlite3_prepare_open_encrypted();
+    sqlite3_prepare_open_encrypted(zKey, nKey);
 
     int rc = sqlite3_open(zFilename, ppDb);
     if (rc == SQLITE_OK)
-        rc = sqlite3_key(*ppDb, zKey, nKey);
+        rc = sqlite3_key(*ppDb, nullptr, 0);
 
     return rc;
 }
@@ -55,7 +54,7 @@ int sqlite3_rekey_encrypted(const char *zFilename, const void *zKeyOld, int nKey
 
         // write keyfile with new file key
         if (mainDB && mainDB->mCrypto) {
-            mainDB->mCrypto->writeKey(zFilename, zKeyNew, nKeyNew);
+            mainDB->mCrypto->rekey(zKeyNew, nKeyNew);
             rc = sqlite3_close(pDB);
         } else {
             rc = SQLITE_ERROR;
@@ -66,17 +65,15 @@ int sqlite3_rekey_encrypted(const char *zFilename, const void *zKeyOld, int nKey
     return rc;
 }
 
-int sqlite3_key(sqlite3* db, const void* zKey, int nKey) {
+int sqlite3_key(sqlite3* db, const void*, int) {
     // The key is only set for the main database, not the temp database
     const char *fileName = sqlite3_db_filename(db, "main");
-    File *mainDB = VFS::instance()->findMainDatabase(fileName);
-    if (!mainDB)
-        return SQLITE_ERROR;
 
     // attach to db
-    int rv = mainDB->attach(db, 0, zKey, nKey);
+    File *mainDB = VFS::instance()->findMainDatabase(fileName);
+    int rv = mainDB ? mainDB->attach(db, 0) : SQLITE_ERROR;
 
-    // unregister custom VFS after opening
-    sqlite3_vfs_unregister(VFS::instance()->base());
+    // release VFS
+    VFS::instance()->finish();
     return rv;
 }

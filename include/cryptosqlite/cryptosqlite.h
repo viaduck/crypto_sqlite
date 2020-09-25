@@ -51,7 +51,7 @@ protected:
 
 extern "C" {
 #include <sqlite3.h>
-SQLITE_API void sqlite3_prepare_open_encrypted();
+SQLITE_API void sqlite3_prepare_open_encrypted(const void *zKey, int nKey);
 SQLITE_API int sqlite3_open_encrypted(const char *zFilename, sqlite3 **ppDb, const void *zKey, int nKey);
 SQLITE_API int sqlite3_rekey_encrypted(const char *zFilename, const void *zKeyOld, int nKeyOld, const void *zKeyNew, int nKeyNew);
 SQLITE_API int sqlite3_key(sqlite3* db, const void* zKey, int nKey);
