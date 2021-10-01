@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018 The ViaDuck Project
+# Copyright (c) 2017-2021 The ViaDuck Project
 #
 # This file is part of cryptoSQLite.
 #
@@ -22,10 +22,6 @@ project(cryptoSQLite)
 # set cmake module path
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/securememory/cmake-modules")
 
-# enable and require c++14
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 # add sqlite amalgamation subdirectory and tests
 add_subdirectory(sqlite)
 add_subdirectory(test)
@@ -44,6 +40,9 @@ file(GLOB_RECURSE CS_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*)
 
 # set up library target
 add_library(cryptosqlite STATIC ${CS_INCLUDES} ${CS_SOURCES})
+
+# require and enable c++14 support
+set_target_properties(cryptosqlite PROPERTIES CXX_STANDARD 14 CXX_STANDARD_REQUIRED YES)
 
 # compile options
 target_compile_options(cryptosqlite PRIVATE

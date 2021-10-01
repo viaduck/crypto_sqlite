@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018 The ViaDuck Project
+# Copyright (c) 2017-2021 The ViaDuck Project
 #
 # This file is part of cryptoSQLite.
 #
@@ -28,6 +28,9 @@ if (GTEST_FOUND)
 
     # basic test executable
     add_executable(CryptoSQLite_Test ${TEST_SOURCE} ${TEST_INCLUDE})
+
+    # require and enable c++14 support
+    set_target_properties(CryptoSQLite_Test PROPERTIES CXX_STANDARD 14 CXX_STANDARD_REQUIRED YES)
 
     # add dependencies
     target_link_libraries(CryptoSQLite_Test ${GTEST_BOTH_LIBRARIES} cryptosqlite)
