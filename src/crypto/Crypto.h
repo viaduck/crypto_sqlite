@@ -33,8 +33,8 @@ public:
     uint32_t extraSize();
 
     void resizePageBuffers(uint32_t size);
-    uint8_t *pageBufferIn() { return static_cast<uint8_t *>(mPageBufferIn.data()); }
-    const uint8_t *pageBufferOut() { return static_cast<const uint8_t *>(mPageBufferOut.const_data()); }
+    uint8_t *pageBufferIn() { return mPageBufferIn.data(); }
+    const uint8_t *pageBufferOut() { return mPageBufferOut.const_data(); }
 
 protected:
     void wrapKey(const void *fileKey, int keylen);

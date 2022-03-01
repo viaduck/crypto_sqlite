@@ -55,10 +55,10 @@ public:
     uint32_t extraSize() const override { return 16; }
 
 protected:
-    void xorBuffer(BufferRange sourceDest, const Buffer &key) const {
+    static void xorBuffer(BufferRange sourceDest, const Buffer &key) {
         for (uint32_t i = 0; i < sourceDest.size() && key.size(); i += key.size())
             for (uint32_t j = 0; j < key.size(); j++)
-                *static_cast<uint8_t *>(sourceDest.data(i + j)) ^= *static_cast<const uint8_t *>(key.const_data(j));
+                *sourceDest.data(i + j) ^= *key.const_data(j);
     }
 };
 

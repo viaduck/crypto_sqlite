@@ -60,8 +60,8 @@ void Crypto::unwrapKey(const void *fileKey, int keylen) {
 
 void Crypto::writeKeyFile() {
     Buffer content;
-    mWrappedKey.serialize(content);
-    mFirstPage.serialize(content);
+    mWrappedKey.serializeAppend(content);
+    mFirstPage.serializeAppend(content);
 
     FileWrapper keyfile(mFileName);
     keyfile.writeFile(content);
