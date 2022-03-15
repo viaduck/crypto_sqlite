@@ -19,8 +19,8 @@
 include(ApplyPatches)
 
 # set up cache variables
-set(SQLITE_BUILD_VERSION "3380000" CACHE STRING "SQLite version string as used in the URL")
-set(SQLITE_BUILD_HASH "e055f6054e97747a135c89e36520c0a423249e8a91c5fc445163f4a6adb20df6" CACHE STRING
+set(SQLITE_BUILD_VERSION "3380100" CACHE STRING "SQLite version string as used in the URL")
+set(SQLITE_BUILD_HASH "6fb55507d4517b5cbc80bd2db57b0cbe1b45880b28f2e4bd6dca4cfe3716a231" CACHE STRING
         "SQLite amalgamation zip sha256 hash used to check the download")
 
 # build url from cache variables
