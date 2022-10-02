@@ -70,13 +70,14 @@ public:
 
 protected:
     VFS();
+    ~VFS();
     void addDatabase(File *db);
 
     sqlite3_vfs mBase;
     /**/
     sqlite3_vfs *mUnderlying;
     SQLite3Mutex mMutex;
-    std::vector<File *> mDBs;
+    std::vector<File *> *mDBs;
     const void *mFileKey;
     int mFileKeySize;
 

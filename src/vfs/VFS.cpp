@@ -22,7 +22,7 @@
 
 VFS VFS::sInstance;
 
-VFS::VFS() : mBase() {
+VFS::VFS() : mBase(), mDBs(new std::vector<File *>()) {
     // find default VFS
     mUnderlying = sqlite3_vfs_find(nullptr);
 
@@ -51,6 +51,10 @@ VFS::VFS() : mBase() {
             sVfsGetSystemCall,      /* xGetSystemCall */
             sVfsNextSystemCall      /* xNextSystemCall */
     };
+}
+
+VFS::~VFS() {
+    delete mDBs;
 }
 
 void VFS::prepare(const void *zKey, int nKey) {
@@ -122,21 +126,21 @@ File *VFS::findMainDatabase(const char *name) {
     auto *dbFileName = sqlite3_filename_database(name);
 
     SQLite3LockGuard lock(mMutex);
-    auto it = std::find_if(mDBs.begin(), mDBs.end(), [dbFileName] (auto *db) {
+    auto it = std::find_if(mDBs->begin(), mDBs->end(), [dbFileName] (auto *db) {
         return db->mFileName == dbFileName;
     });
 
-    return (it != mDBs.end()) ? *it : nullptr;
+    return (it != mDBs->end()) ? *it : nullptr;
 }
 
 void VFS::addDatabase(File *db) {
     SQLite3LockGuard lock(mMutex);
-    mDBs.push_back(db);
+    mDBs->push_back(db);
 }
 
 void VFS::removeDatabase(File *db) {
     SQLite3LockGuard lock(mMutex);
-    mDBs.erase(std::remove_if(mDBs.begin(), mDBs.end(), [db] (auto it) {
+    mDBs->erase(std::remove_if(mDBs->begin(), mDBs->end(), [db] (auto it) {
         return it == db;
-    }), mDBs.end());
+    }), mDBs->end());
 }
