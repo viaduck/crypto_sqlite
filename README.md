@@ -1,4 +1,4 @@
-# cryptoSQLite
+# CryptoSQLite
 Generic SQLite3 encryption codec C++ interface for encrypting database pages
 plus SQLite3 header.
 
@@ -12,7 +12,7 @@ with a password)
 
 ## Setup
 1. Initialize Git submodules: `git submodule update --init --recursive`
-2. Link against the `cryptosqlite` CMake library target.
+2. Link against the `crypto_sqlite` CMake library target.
 3. Implement `IDataCrypt` interface (for an example see
 [test/TestCrypt.h](test/TestCrypt.h) or
 [test/PlaintextCrypt.h](test/PlaintextCrypt.h))
@@ -22,7 +22,6 @@ Either:
 
 1. `int sqlite3_open_encrypted(const char *fileName, sqlite3 **db, const void
 *key, int keySize)`
-
 Or:
 
 1. `void sqlite3_prepare_open_encrypted(const char *fileName, const void *key,
@@ -35,7 +34,7 @@ thread-safe, but *using* them is.
 
 
 ## SQLite Compatibility
-cryptoSQLite automatically downloads, patches, and compiles the SQLite3
+CryptoSQLite automatically downloads, patches, and compiles the SQLite3
 amalgamation source. This logic can be found in
 [sqlite/CMakeLists.txt](sqlite/CMakeLists.txt). Updating the used SQLite3
 version is achieved by simply modifying the variables in the aforementioned
@@ -48,9 +47,9 @@ changes.
 ## Related Projects
 * [SQLiteModernCPP](https://github.com/SqliteModernCpp/sqlite_modern_cpp):
 Modern SQLite3 wrapper
-* [cryptosqlitepp](https://github.com/viaduck/cryptosqlitepp): Combines
+* [CryptoSQLiteCPP](https://github.com/viaduck/cryptosqlitepp): Combines
 [SQLiteModernCPP](https://github.com/SqliteModernCpp/sqlite_modern_cpp) and
-cryptoSQLite into one Git repository for simplified usage.
+CryptoSQLite into one Git repository for simplified usage.
 
 ## Alternatives
 The following alternative projects already supply ciphers to be used for
@@ -66,7 +65,7 @@ This library is subject to the GNU Lesser General Public License v3.0 (GNU
 LGPLv3).
 
 ```
-Copyright (C) 2017-2018  The ViaDuck Project
+Copyright (C) 2017-2023  The ViaDuck Project
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by

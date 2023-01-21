@@ -1,27 +1,27 @@
 /*
  * Copyright (C) 2017-2018 The ViaDuck Project
  *
- * This file is part of cryptoSQLite.
+ * This file is part of CryptoSQLite.
  *
- * cryptoSQLite is free software: you can redistribute it and/or modify
+ * CryptoSQLite is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * cryptoSQLite is distributed in the hope that it will be useful,
+ * CryptoSQLite is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with cryptoSQLite.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CryptoSQLite.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "BasicTest.h"
 
 #include <secure_memory/String.h>
-#include <cryptosqlite/cryptosqlite.h>
-#include <cryptosqlite/crypto/PlaintextCrypt.h>
+#include <crypto_sqlite/crypto_sqlite.h>
+#include <crypto_sqlite/crypto/PlaintextCrypt.h>
 
 #define ASSERT_OK(x) ASSERT_EQ(SQLITE_OK, (x))
 #define ASSERT_DONE(x) ASSERT_EQ(SQLITE_DONE, (x))
@@ -35,7 +35,7 @@ TEST_F(BasicTest, testNoPWTransact) {
 }
 
 TEST_F(BasicTest, testPlaintext) {
-    cryptosqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
+    crypto_sqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
         crypt.reset(new PlaintextCrypt());
     });
 
@@ -46,7 +46,7 @@ TEST_F(BasicTest, testPlaintext) {
 }
 
 TEST_F(BasicTest, testPlaintextTransact) {
-    cryptosqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
+    crypto_sqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
         crypt.reset(new PlaintextCrypt());
     });
 
@@ -57,7 +57,7 @@ TEST_F(BasicTest, testPlaintextTransact) {
 }
 
 TEST_F(BasicTest, testPlaintextTransactRekey) {
-    cryptosqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
+    crypto_sqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
         crypt.reset(new PlaintextCrypt());
     });
 
@@ -70,7 +70,7 @@ TEST_F(BasicTest, testPlaintextTransactRekey) {
 }
 
 TEST_F(BasicTest, testTestCrypt) {
-    cryptosqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
+    crypto_sqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
         crypt.reset(new TestCrypt());
     });
 
@@ -81,7 +81,7 @@ TEST_F(BasicTest, testTestCrypt) {
 }
 
 TEST_F(BasicTest, testTestCryptTransact) {
-    cryptosqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
+    crypto_sqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
         crypt.reset(new TestCrypt());
     });
 
@@ -92,7 +92,7 @@ TEST_F(BasicTest, testTestCryptTransact) {
 }
 
 TEST_F(BasicTest, testTestCryptTransactRekey) {
-    cryptosqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
+    crypto_sqlite::setCryptoFactory([] (std::unique_ptr<IDataCrypt> &crypt) {
         crypt.reset(new TestCrypt());
     });
 

@@ -25,7 +25,7 @@ build:linux-x86_64:
 lint:linux-x86_64:
     stage: lint
     script:
-        - vd-lint cryptoSQLite $PWD
+        - vd-lint CryptoSQLite $PWD
     needs:
         - job: build:linux-x86_64
           artifacts: false
@@ -36,7 +36,7 @@ test:linux-x86_64:
     stage: test
     script:
         - cd /tmp
-        - $OLDPWD/build-linux-x86_64/test/CryptoSQLite_Test
+        - $OLDPWD/build-linux-x86_64/test/crypto_sqlite_test
     needs:
         - build:linux-x86_64
 
@@ -50,7 +50,7 @@ build:windows-x86_64:
         - cd build-windows-x86_64
         - cmake -GNinja ../ -DPREBUILT_BRANCH=x86_64-w64-mingw32 -DCMAKE_TOOLCHAIN_FILE=../external/icu-cmake/cmake-modules/toolchains/mingw64-x86_64.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
         - ninja
-        - peldd -p "external/icu-cmake/icu_pre-prefix/src/icu_pre/lib" test/CryptoSQLite_Test.exe | grep -vE '\.exe$' | xargs cp -t .
+        - peldd -p "external/icu-cmake/icu_pre-prefix/src/icu_pre/lib" test/crypto_sqlite_test.exe | grep -vE '\.exe$' | xargs cp -t .
     artifacts:
         expire_in: 2h                   # do not pollute disk
         paths:
@@ -61,7 +61,7 @@ test:windows-x86_64:
       GIT_STRATEGY: none
     script:
         - cd build-windows-x86_64
-        - test\CryptoSQLite_Test.exe             # runs gtest target
+        - test\crypto_sqlite_test.exe             # runs gtest target
     stage: test
     needs:
         - build:windows-x86_64

@@ -1,6 +1,6 @@
-[submodule "external/securememory"]
-	path = external/securememory
-	url = ../../viaduck/securememory.git
+[submodule "external/secure_memory"]
+	path = external/secure_memory
+	url = ../../viaduck/secure_memory.git
 [submodule "external/icu-cmake"]
 	path = external/icu-cmake
 	url = ../../viaduck/icu-cmake.git

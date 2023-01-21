@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2017-2020 The ViaDuck Project
  *
- * This file is part of cryptoSQLite.
+ * This file is part of CryptoSQLite.
  *
- * cryptoSQLite is free software: you can redistribute it and/or modify
+ * CryptoSQLite is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * cryptoSQLite is distributed in the hope that it will be useful,
+ * CryptoSQLite is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with cryptoSQLite.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CryptoSQLite.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef CRYPTOSQLITE_CRYPTOSQLITE_H
@@ -23,14 +23,14 @@
 #include <memory>
 #include <functional>
 #include <secure_memory/Buffer.h>
-#include <cryptosqlite/crypto/IDataCrypt.h>
+#include <crypto_sqlite/crypto/IDataCrypt.h>
 
-class cryptosqlite_exception : public std::runtime_error {
+class crypto_sqlite_exception : public std::runtime_error {
 public:
-    explicit cryptosqlite_exception(const std::string &msg) : std::runtime_error(msg) { }
+    explicit crypto_sqlite_exception(const std::string &msg) : std::runtime_error(msg) { }
 };
 
-class cryptosqlite {
+class crypto_sqlite {
 public:
     using CryptoFactory = std::function<void(std::unique_ptr<IDataCrypt>&)>;
 
@@ -40,7 +40,7 @@ public:
 
     static void makeDataCrypt(std::unique_ptr<IDataCrypt> &out) {
         if (!sFactoryCrypt)
-            throw cryptosqlite_exception("No crypto factory set.");
+            throw crypto_sqlite_exception("No crypto factory set.");
 
         sFactoryCrypt(out);
     }
