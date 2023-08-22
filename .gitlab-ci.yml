@@ -48,7 +48,7 @@ build:windows-x86_64:
         - update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
         - mkdir build-windows-x86_64
         - cd build-windows-x86_64
-        - cmake -GNinja ../ -DPREBUILT_BRANCH=x86_64-w64-mingw32 -DCMAKE_TOOLCHAIN_FILE=../external/icu-cmake/cmake-modules/toolchains/mingw64-x86_64.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
+        - cmake -GNinja ../ -DPREBUILT_BRANCH=x86_64-w64-mingw32 -DCMAKE_TOOLCHAIN_FILE=../external/secure_memory/cmake-modules/toolchains/mingw64-x86_64.cmake -DGTEST_SRC_DIR=/usr/src/googletest/
         - ninja
         - peldd -p "external/icu-cmake/icu_pre-prefix/src/icu_pre/lib" test/crypto_sqlite_test.exe | grep -vE '\.exe$' | xargs cp -t .
     artifacts:
