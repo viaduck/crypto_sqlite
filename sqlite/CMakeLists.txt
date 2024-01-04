@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2023 The ViaDuck Project
+# Copyright (c) 2017-2024 The ViaDuck Project
 #
 # This file is part of CryptoSQLite.
 #
@@ -30,24 +30,24 @@ set(SQLITE_SUBDIR "sqlite-amalgamation-${SQLITE_BUILD_VERSION}")
 # download amalgamation zip with hash check
 file(DOWNLOAD
         ${SQLITE_URL}
-        ${CMAKE_CURRENT_SOURCE_DIR}/sqlite.zip
+        ${CMAKE_CURRENT_BINARY_DIR}/sqlite.zip
         EXPECTED_HASH SHA256=${SQLITE_BUILD_HASH}
         SHOW_PROGRESS
         )
 
 # unpack zip only if needed
-if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR})
+if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${SQLITE_SUBDIR})
     # unpack the amalgamation zip in current dir
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar x sqlite.zip
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
     # apply our patches to sqlite
-    ApplyPatches("${CMAKE_CURRENT_SOURCE_DIR}/patches/*.patch" "${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR}")
+    ApplyPatches("${CMAKE_CURRENT_SOURCE_DIR}/patches/*.patch" "${CMAKE_CURRENT_BINARY_DIR}/${SQLITE_SUBDIR}")
 endif()
 
 # find files just downloaded
-file(GLOB_RECURSE SQ_FILES ${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR}/*)
+file(GLOB_RECURSE SQ_FILES ${CMAKE_CURRENT_BINARY_DIR}/${SQLITE_SUBDIR}/*)
 
 # export variables to parent scope
 set(SQLITE_FILES SQ_FILES PARENT_SCOPE)
-set(SQLITE_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/${SQLITE_SUBDIR}/ PARENT_SCOPE)
+set(SQLITE_INCLUDES ${CMAKE_CURRENT_BINARY_DIR}/${SQLITE_SUBDIR}/ PARENT_SCOPE)
