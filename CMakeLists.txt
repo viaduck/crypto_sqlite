@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2023 The ViaDuck Project
+# Copyright (c) 2017-2024 The ViaDuck Project
 #
 # This file is part of CryptoSQLite.
 #
@@ -19,12 +19,14 @@
 cmake_minimum_required(VERSION 3.1...3.27)
 project(crypto_sqlite)
 
+# options
+option(CRYPTO_SQLITE_BUILD_TESTS "Enable test compilation for crypto_sqlite" OFF)
+
 # set cmake module path
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/secure_memory/cmake-modules")
 
 # add sqlite amalgamation subdirectory and tests
 add_subdirectory(sqlite)
-add_subdirectory(test)
 
 if (NOT TARGET secure_memory)
     add_subdirectory(external/secure_memory)
@@ -114,3 +116,8 @@ target_include_directories(crypto_sqlite PUBLIC
         ${SQLITE_INCLUDES}
         ${CMAKE_CURRENT_SOURCE_DIR}/include/
         )
+
+# tests
+if (CRYPTO_SQLITE_BUILD_TESTS)
+    add_subdirectory(test)
+endif()
