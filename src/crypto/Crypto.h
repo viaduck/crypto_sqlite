@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The ViaDuck Project
+ * Copyright (C) 2020-2025 The ViaDuck Project
  *
  * This file is part of CryptoSQLite.
  *
@@ -30,11 +30,11 @@ public:
     void decryptPage(void *pageInOut, uint32_t pageSize, int pageNo);
     void decryptFirstPageCache();
 
-    uint32_t extraSize();
+    uint32_t extraSize() const;
 
     void resizePageBuffers(uint32_t size);
     uint8_t *pageBufferIn() { return mPageBufferIn.data(); }
-    const uint8_t *pageBufferOut() { return mPageBufferOut.const_data(); }
+    const uint8_t *pageBufferOut() const { return mPageBufferOut.const_data(); }
 
 protected:
     void wrapKey(const void *fileKey, int keylen);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The ViaDuck Project
+ * Copyright (C) 2020-2025 The ViaDuck Project
  *
  * This file is part of CryptoSQLite.
  *
@@ -105,7 +105,7 @@ void Crypto::decryptFirstPageCache() {
     // fit page buffers to cache or minimum page size if cache empty
     resizePageBuffers(std::max(mFirstPage.size(), 512u));
     // decrypt first page from cache or leave 0-bytes if cache empty
-    if (mFirstPage.size() > 0) mDataCrypt->decrypt(1, mFirstPage, mPageBufferOut, mKey);
+    if (!mFirstPage.empty()) mDataCrypt->decrypt(1, mFirstPage, mPageBufferOut, mKey);
 }
 
 void Crypto::resizePageBuffers(uint32_t size) {
@@ -116,6 +116,6 @@ void Crypto::resizePageBuffers(uint32_t size) {
     mPageBufferOut.padd(size, 0);
 }
 
-uint32_t Crypto::extraSize() {
+uint32_t Crypto::extraSize() const {
     return mDataCrypt->extraSize();
 }
