@@ -73,8 +73,8 @@ void Crypto::readKeyFile() {
     keyfile.readFile(content);
 
     BufferRangeConst chain(content);
-    mWrappedKey.deserialize(chain);
-    mFirstPage.deserialize(chain);
+    if (!mWrappedKey.deserialize(chain) || !mFirstPage.deserialize(chain))
+        throw crypto_sqlite_exception("Failed to deserialize from keyfile");
 }
 
 const void *Crypto::encryptPage(const void *page, uint32_t pageSize, int pageNo) {
