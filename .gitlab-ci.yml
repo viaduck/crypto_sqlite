@@ -14,7 +14,11 @@ build:linux-x86_64:
     script:
         - mkdir build-linux-x86_64
         - cd build-linux-x86_64
-        - cmake -GNinja ../ -DCRYPTO_SQLITE_BUILD_TESTS=ON -DGTEST_SRC_DIR=/usr/src/googletest/
+        - >-
+            cmake -GNinja
+            -DCRYPTO_SQLITE_BUILD_TESTS=ON
+            -DGTEST_SRC_DIR=/usr/src/googletest/
+            ../
         - ninja
     artifacts:
         expire_in: 2h                   # do not pollute disk
@@ -47,7 +51,13 @@ build:windows-x86_64:
         - update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
         - mkdir build-windows-x86_64
         - cd build-windows-x86_64
-        - cmake -GNinja ../ -DPREBUILT_BRANCH=x86_64-w64-mingw32 -DCMAKE_TOOLCHAIN_FILE=../external/secure_memory/cmake-modules/toolchains/mingw64-x86_64.cmake -DCRYPTO_SQLITE_BUILD_TESTS=ON -DGTEST_SRC_DIR=/usr/src/googletest/
+        - >-
+            cmake -GNinja
+            -DCMAKE_TOOLCHAIN_FILE=/opt/toolchains/x86_64-w64-mingw32.cmake
+            -DGTEST_SRC_DIR=/usr/src/googletest/
+            -DPREBUILT_BRANCH=x86_64-w64-mingw32
+            -DCRYPTO_SQLITE_BUILD_TESTS=ON
+            ../
         - ninja
         - peldd -p "external/icu-cmake/icu_pre-prefix/src/icu_pre/bin" test/crypto_sqlite_test.exe | grep -vE '\.exe$' | xargs cp -t .
     artifacts:
@@ -74,7 +84,16 @@ build:android-arm64-v8a:
         - echo $ANDROID_NDK
         - mkdir build-android-arm64-v8a
         - cd build-android-arm64-v8a
-        - cmake -GNinja ../ -DPREBUILT_BRANCH=arm64-v8a-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=arm64-v8a -DANDROID_TOOLCHAIN=clang -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DCRYPTO_SQLITE_BUILD_TESTS=ON -DGTEST_SRC_DIR=/usr/src/googletest/
+        - >-
+            cmake -GNinja
+            -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
+            -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_NDK=$ANDROID_NDK
+            -DANDROID_ABI=arm64-v8a
+            -DANDROID_TOOLCHAIN=clang
+            -DPREBUILT_BRANCH=arm64-v8a-android
+            -DCRYPTO_SQLITE_BUILD_TESTS=ON
+            -DGTEST_SRC_DIR=/usr/src/googletest/
+            ../
         - ninja
         
 build:android-armeabi-v7a:
@@ -84,7 +103,16 @@ build:android-armeabi-v7a:
         - echo $ANDROID_NDK
         - mkdir build-android-armeabi-v7a
         - cd build-android-armeabi-v7a
-        - cmake -GNinja ../ -DPREBUILT_BRANCH=armeabi-v7a-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=armeabi-v7a -DANDROID_TOOLCHAIN=clang -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DCRYPTO_SQLITE_BUILD_TESTS=ON -DGTEST_SRC_DIR=/usr/src/googletest/
+        - >-
+            cmake -GNinja
+            -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
+            -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_NDK=$ANDROID_NDK
+            -DANDROID_ABI=armeabi-v7a
+            -DANDROID_TOOLCHAIN=clang
+            -DPREBUILT_BRANCH=armeabi-v7a-android
+            -DCRYPTO_SQLITE_BUILD_TESTS=ON
+            -DGTEST_SRC_DIR=/usr/src/googletest/
+            ../
         - ninja
         
 build:android-i686:
@@ -94,7 +122,16 @@ build:android-i686:
         - echo $ANDROID_NDK
         - mkdir build-android-i686
         - cd build-android-i686
-        - cmake -GNinja ../ -DPREBUILT_BRANCH=i686-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86 -DANDROID_TOOLCHAIN=clang -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DCRYPTO_SQLITE_BUILD_TESTS=ON -DGTEST_SRC_DIR=/usr/src/googletest/
+        - >-
+            cmake -GNinja
+            -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
+            -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_NDK=$ANDROID_NDK
+            -DANDROID_ABI=x86
+            -DANDROID_TOOLCHAIN=clang
+            -DPREBUILT_BRANCH=i686-android
+            -DCRYPTO_SQLITE_BUILD_TESTS=ON
+            -DGTEST_SRC_DIR=/usr/src/googletest/
+            ../
         - ninja
         
 build:android-x86_64:
@@ -104,5 +141,15 @@ build:android-x86_64:
         - echo $ANDROID_NDK
         - mkdir build-android-x86_64
         - cd build-android-x86_64
-        - cmake -GNinja ../ -DPREBUILT_BRANCH=x86_64-android -DANDROID_PLATFORM=$ANDROID_PLATFORM -DANDROID_ABI=x86_64 -DANDROID_TOOLCHAIN=clang -DANDROID_NDK=$ANDROID_NDK -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake -DCRYPTO_SQLITE_BUILD_TESTS=ON -DGTEST_SRC_DIR=/usr/src/googletest/
+        - >-
+            cmake -GNinja
+            -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake
+            -DANDROID_PLATFORM=$ANDROID_PLATFORM
+            -DANDROID_NDK=$ANDROID_NDK
+            -DANDROID_ABI=x86_64
+            -DANDROID_TOOLCHAIN=clang
+            -DPREBUILT_BRANCH=x86_64-android
+            -DCRYPTO_SQLITE_BUILD_TESTS=ON
+            -DGTEST_SRC_DIR=/usr/src/googletest/
+            ../
         - ninja
